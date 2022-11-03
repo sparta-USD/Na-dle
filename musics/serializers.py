@@ -29,6 +29,12 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+        
+
+class ReviewUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ('content', 'grade')
 
 
 class MusicDetailSerializer(serializers.ModelSerializer):
