@@ -9,7 +9,7 @@ created_at = datetime.datetime.now()
 
 items_df = pd.DataFrame(columns=['user_id', 'music_id', 'grade', 'created_at'])
 for user in users_list:
-    for i in range(random.randrange(3,20)):
+    for i in range(random.randrange(10,20)):
         user_id = user
         music_id = random.choice(musics_list)
         grade = random.choice(grade_list)

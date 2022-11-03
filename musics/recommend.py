@@ -4,30 +4,25 @@ from sklearn.metrics.pairwise import cosine_similarity
 def music_grades_merge():
     grades = pd.read_csv('grades_data.csv')
     musics = pd.read_csv('music_data.csv')
-    # 데이터프레임을 출력했을때 더 많은 열이 보이도록 함
     pd.set_option('display.max_columns', 10)
     pd.set_option('display.width', 300)
 
-    # movieId를 기준으로 ratings 와 movies 를 결합함
+    # grades, musics 결합
     music_ratings = pd.merge(grades, musics, on='music_id').sort_values(by='user_id', ascending=True)
-    # user별로 영화에 부여한 rating 값을 볼 수 있도록 pivot table 사용
     title_user = music_ratings.pivot_table('grade', index='user_id', columns='music_id')
-    # 평점을 부여안한 영화는 그냥 0이라고 부여
     title_user = title_user.fillna(0)
-    print(title_user.head)
 
     return title_user
 
 def collaborative_filtering(title_user):
-    # 유저 1~610 번과 유저 1~610 번 간의 코사인 유사도를 구함
+    #코사인 유사도
     user_based_collab = cosine_similarity(title_user, title_user)
     user_based_collab = pd.DataFrame(user_based_collab, index=title_user.index, columns=title_user.index)
     
     csv_path = 'user_distance_data.csv'
     user_based_collab.to_csv(csv_path, index=False)
-    return
-    
-##################################################
+
+
 def recommend_users(user_id):
     """
     유저와 비슷한 취향을 가진 사람들을 추려주는 함수입니다.
@@ -48,3 +43,27 @@ def recommend_users(user_id):
     similar_users_dict = similar_users.to_dict()
 
     return list(similar_users_dict.keys())
+
+
+def recommend_musics(user_id):
+    # 유저와 비슷한 취향의 유저의 평점을 작성한 음원 출력
+    music_grades = music_grades_merge() #title_user
+    user_based_collab = pd.read_csv('user_distance_data.csv')
+    user_based_collab.index=music_grades.index
+    user_based_collab.columns=music_grades.index
+
+    # # # 1번 유저와 가장 비슷한 유저를 뽑고,
+    user = user_based_collab[1].sort_values(ascending=False)[:10].index[1]
+    # # # 유저가 좋아했던 음악를 평점 내림차순으로 출력
+    result_pd = music_grades.query(f"user_id == {user}").sort_values(ascending=False, by=user, axis=1)
+    result_dict = result_pd.to_dict()
+    result = []
+
+    for key in result_dict:
+        if(result_dict[key][80]>0):
+            result.append({
+                "music_id":key,
+                "grade":result_dict[key][80]
+            })
+    return result
+
