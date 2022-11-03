@@ -1,3 +1,4 @@
+from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -36,4 +37,14 @@ class LogoutView(APIView):
         else:
             return Response({"message":f"${serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)  
     
+class FollowView(APIView):
+    def post(self, request, user_id):
+        you = get_object_or_404(User, id=user_id)
+        me = request.user
+        if me in you.follower.all():
+            you.follower.remove(me)
+            return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+        else:
+            you.follower.add(me)
+            return Response("follow했습니다.", status=status.HTTP_200_OK)
     
