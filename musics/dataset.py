@@ -34,4 +34,4 @@ items_df.head()
 
 
 csv_path = 'music_data.csv'
-items_df.to_csv(csv_path, index_label='id')
+items_df.to_csv(csv_path, index=False)
