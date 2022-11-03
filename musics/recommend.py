@@ -31,7 +31,7 @@ def func01():
 
     
 
-def recommand_musics(user_id):
+def recommend_musics(user_id):
     # 유저와 비슷한 취향의 유저의 평점을 작성한 음원 출력
     music_grades = music_grades_merge() #title_user
     user_based_collab = pd.read_csv('user_distance_data.csv')
