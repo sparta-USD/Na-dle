@@ -1,12 +1,17 @@
-import csv
 import spotipy
 import pandas as pd
 from spotipy.oauth2 import SpotifyClientCredentials
+import environ
+
+env = environ.Env(DEBUG=(bool, True))
+environ.Env.read_env(
+    env_file='.env'
+)
+SPOTIPY_CLIENT_ID = env('SPOTIPY_CLIENT_ID')
+SPOTIPY_CLIENT_SECRET = env('SPOTIPY_CLIENT_SECRET')
 
 
-birdy_uri = 'spotify:artist:2WX2uTcsvV5OnS0inACecP'
 spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-
 
 items_df = pd.DataFrame(columns=['title', 'artist', 'album', 'image', 'track_id'])
 
@@ -28,5 +33,5 @@ print(items_df.shape)
 items_df.head()
 
 
-csv_path = 'test.csv'
-items_df.to_csv(csv_path, index_label='id') 
+csv_path = 'music_data.csv'
+items_df.to_csv(csv_path, index_label='id')
