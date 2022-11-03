@@ -33,5 +33,22 @@ def func01():
 
 def recommand_musics(user_id):
     # 유저와 비슷한 취향의 유저의 평점을 작성한 음원 출력
-    
-    return 0
+    music_grades = music_grades_merge() #title_user
+    user_based_collab = pd.read_csv('user_distance_data.csv')
+    user_based_collab.index=music_grades.index
+    user_based_collab.columns=music_grades.index
+
+    # # # 1번 유저와 가장 비슷한 266번 유저를 뽑고,
+    user = user_based_collab[1].sort_values(ascending=False)[:10].index[1]
+    # # # 266번 유저가 좋아했던 음악를 평점 내림차순으로 출력
+    result_pd = music_grades.query(f"user_id == {user}").sort_values(ascending=False, by=user, axis=1)
+    result_dict = result_pd.to_dict()
+    result = []
+
+    for key in result_dict:
+        if(result_dict[key][80]>0):
+            result.append({
+                "music_id":key,
+                "grade":result_dict[key][80]
+            })
+    return result
