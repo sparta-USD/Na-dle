@@ -8,6 +8,7 @@ new_list = []
 for t in test:
     new_data = {"model":"musics.music"}
     new_data["fields"] = {}
+    new_data["fields"]["id"] = t["music_id"]+1
     new_data["fields"]["title"] = t["title"]
     new_data["fields"]["album"] = t["album"]
     new_data["fields"]["artist"] = t["artist"]
@@ -22,4 +23,4 @@ with open('music_data_for_db.json', 'w', encoding='UTF-8') as f:
     json.dump(new_list, f, ensure_ascii=False, indent=2)
 
 # 터미널에 아래 코드를 입력하면 db에 저장됨
-# python manage.py loaddata test_json.json
+# python manage.py loaddata music_data_for_db.json

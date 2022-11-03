@@ -25,5 +25,5 @@ print(items_df.shape)
 items_df.head()
 
 
-csv_path = 'ratings_data.csv'
+csv_path = 'grades_data.csv'
 items_df.to_csv(csv_path, index=False)
