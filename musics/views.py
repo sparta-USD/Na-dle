@@ -23,3 +23,24 @@ class ReviewView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReviewDetailView(APIView):
+    def put(self, request, id): # music_id로 변경해야함!
+        review = get_object_or_404(Review, id=id)
+        if request.user == review.user:
+            serializer = ReviewCreateSerializer(review, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
+        
+    def delete(self, request, id): # music_id로 변경해야함!
+            review = get_object_or_404(Review, id=id)
+            if request.user == review.user:
+                review.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
