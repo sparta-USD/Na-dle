@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from users.models import User
+from musics.serializers import ReviewSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields="__all__"
+        fields=['username', 'fullname', 'password']
         
     def create(self, validated_data):
         user = super().create(validated_data)
@@ -52,3 +53,19 @@ class LogoutSerializer(serializers.ModelSerializer):
             RefreshToken(self.token).blacklist()
         except TokenError:
             self.fail('bad_token')
+
+class ProfileSerializer(serializers.ModelSerializer):
+    my_reviews = ReviewSerializer(many=True)
+    
+    def get_user(self, obj):
+        return obj.user.username
+
+    class Meta:
+        model = User
+        fields = "__all__"
+        
+class ProfileEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields=("profile_image", "fullname", "email")
+        

@@ -3,9 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
-from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, LogoutSerializer
-from users.models import User
+from users.serializers import UserSerializer, CustomTokenObtainPairSerializer, LogoutSerializer, ProfileSerializer, ProfileEditSerializer
 
+from users.models import User
+from musics.models import Review
+from musics.serializers import ReviewSerializer, MusicDetailSerializer
 from rest_framework_simplejwt.views import (
     TokenObtainPairView
 )
@@ -47,4 +49,22 @@ class FollowView(APIView):
         else:
             you.follower.add(me)
             return Response("follow했습니다.", status=status.HTTP_200_OK)
+
+class ProfileView(APIView):
+    def get(self, request, user_id):
+        profile = get_object_or_404(User, id=user_id)
+        serializer = ProfileSerializer(profile)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
+    
+    def put(self, request, user_id):
+        profile = get_object_or_404(User, id=user_id)
+        serializer = ProfileEditSerializer(profile, data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
