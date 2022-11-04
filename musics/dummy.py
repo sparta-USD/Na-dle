@@ -34,4 +34,3 @@ def grade_to_csv(grades_data):
             write_data = DictWriter(csv_file, fieldnames=headers)
             write_data.writerow(grades_data)
             csv_file.close()
-grade_to_csv({"user_id":209, "music_id":209, "grade":5, "created_at":20})
