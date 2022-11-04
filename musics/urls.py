@@ -2,7 +2,8 @@ from django.urls import path
 from musics import views
 
 urlpatterns = [
-    path('reviews/', views.ReviewView.as_view(), name='review_view'),#music_id 추가필요
-    path('reviews/put/<int:id>/', views.ReviewDetailView.as_view(), name='review_detail_view'),#music_id 추가필요
-    
+    path('<int:music_id>/reviews/', views.ReviewView.as_view(), name='review_view'),
+    path('<int:music_id>/reviews/<int:review_id>/', views.ReviewDetailView.as_view(), name='review_detail_view'),
+    path('', views.MusicView.as_view(), name='music_view'),
+    path('<int:music_id>/', views.MusicDetailView.as_view(), name='music_detail_view'),
 ]

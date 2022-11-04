@@ -13,7 +13,8 @@ class Music(models.Model):
         return str(self.title)
 
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="my_reviews")
+    music = models.ForeignKey(Music, on_delete=models.CASCADE, related_name="reviews")
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
