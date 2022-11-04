@@ -4,10 +4,11 @@ from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from musics.models import Review,Music
 from musics.serializers import ReviewSerializer,ReviewCreateSerializer,MusicSerializer,MusicCreateSerializer, MusicDetailSerializer, ReviewUpdateSerializer
-from musics.recommend import recommend_musics, recommend_users
+from musics.recommend import recommend_musics, recommend_users, music_grades_merge, collaborative_filtering
 from users.models import User
 from users.serializers import RecommendUserSerializer
 
+from musics.dummy import grade_to_csv
 # Create your views here.
 class ReviewView(APIView):
     def post(self, request, music_id):
@@ -15,6 +16,16 @@ class ReviewView(APIView):
         serializer = ReviewCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
+            
+            # 리뷰 생성시 코사인유사도 실시간으로 측정하는 코드 추가
+            grades_data = {
+                'user_id':serializer.data['user'],
+                'music_id':serializer.data['music'],
+                'grade':serializer.data['grade'],
+                'created_at':serializer.data['created_at']
+            }
+            grade_to_csv(grades_data) # grades_data.csv에 행 추가해줌
+            collaborative_filtering(music_grades_merge())
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -46,6 +57,7 @@ class MusicView(APIView):
         musics = Music.objects.all()[:11]
         serializer = MusicSerializer(musics, many=True)
         
+        # 메인페이지에서 추천기능 코드 추가
         recommend_users_id = recommend_users(request.user.id)
         recommend_musics_id = recommend_musics(request.user.id)
         

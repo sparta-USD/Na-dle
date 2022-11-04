@@ -29,9 +29,8 @@ for items in category_playlists['playlists']['items'] :
                 items['track']['id'],]
         items_df.loc[len(items_df)] = track
 
-print(items_df.shape)
 items_df.head()
 
 
-csv_path = 'music_data.csv'
+csv_path = 'data/music_data.csv'
 items_df.to_csv(csv_path, index_label='music_id')

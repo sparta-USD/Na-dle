@@ -1,6 +1,6 @@
 import json
 from pprint import pprint
-with open('music_data.json', 'r') as f:
+with open('data/music_data.json', 'r') as f:
     test = json.load(f)
 pprint(test)
 
@@ -18,9 +18,9 @@ for t in test:
     
 pprint(new_list)
 
-with open('music_data_for_db.json', 'w', encoding='UTF-8') as f:
+with open('data/music_data_for_db.json', 'w', encoding='UTF-8') as f:
     # dump(데이터 json객체, 파일, ensure_ascii: 아스키 코드로 변경 여부, indent: 들여쓰기 몇개할건지)
     json.dump(new_list, f, ensure_ascii=False, indent=2)
 
 # 터미널에 아래 코드를 입력하면 db에 저장됨
-# python manage.py loaddata music_data_for_db.json
+# python manage.py loaddata data/music_data_for_db.json
