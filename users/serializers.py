@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-# 221104 최해민 추천유저시리얼라이저 추가
+# 추천유저시리얼라이저 추가
 class RecommendUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
