@@ -61,9 +61,11 @@ def recommend_musics(user_id):
 
     for key in result_dict:
         if(result_dict[key][80]>0):
-            result.append({
-                "music_id":key,
-                "grade":result_dict[key][80]
-            })
+            # result.append({
+            #     "music_id":key,
+            #     "grade":result_dict[key][80]
+            # })
+            
+            result.append(key)
     return result
-
+# print(recommend_musics(1))

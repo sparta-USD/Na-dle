@@ -2,10 +2,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from musics import serializers
 from musics.models import Review,Music
 from musics.serializers import ReviewSerializer,ReviewCreateSerializer,MusicSerializer,MusicCreateSerializer, MusicDetailSerializer, ReviewUpdateSerializer
-
+from musics.recommend import recommend_musics, recommend_users
+from users.models import User
+from users.serializers import RecommendUserSerializer
 
 # Create your views here.
 class ReviewView(APIView):
@@ -42,9 +43,24 @@ class ReviewDetailView(APIView):
 
 class MusicView(APIView):
     def get(self, request):
-        musics = Music.objects.all()
+        musics = Music.objects.all()[:11]
         serializer = MusicSerializer(musics, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        recommend_users_id = recommend_users(request.user.id)
+        recommend_musics_id = recommend_musics(request.user.id)
+        
+        re_users = User.objects.filter(id__in=recommend_users_id)
+        re_musics = Music.objects.filter(id__in=recommend_musics_id)
+        
+        re_musics_serializer = MusicSerializer(re_musics, many=True)
+        re_users_serializer = RecommendUserSerializer(re_users, many=True)
+        
+        context = {
+            "musics" : serializer.data,
+            "recommend_users" : re_users_serializer.data,
+            "recommend_musics" : re_musics_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     
     def post(self, request):
