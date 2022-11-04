@@ -11,6 +11,13 @@ from musics.serializers import ReviewSerializer,ReviewCreateSerializer,MusicSeri
 class ReviewView(APIView):
     def post(self, request, music_id):
         request.data.update({'user': request.user.id, 'music': music_id})
+        # user가 리뷰 작성 시 music_id 당 1개씩 작성 제한
+        musics = Music.objects.get(id=music_id)
+        reviews = musics.reviews.all()
+        for review in reviews:
+            if review.user==request.user:
+                return Response({'message':'이미 작성 하였습니다!'})
+
         serializer = ReviewCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
