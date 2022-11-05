@@ -1,3 +1,4 @@
+import random
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -7,6 +8,7 @@ from musics.serializers import ReviewSerializer,ReviewCreateSerializer,MusicSeri
 from musics.recommend import recommend_musics, recommend_users, music_grades_merge, collaborative_filtering
 from users.models import User
 from users.serializers import RecommendUserSerializer
+from django.db.models import Max 
 
 from musics.dummy import grade_to_csv
 # Create your views here.
@@ -111,3 +113,19 @@ class MusicDetailView(APIView):
         music = get_object_or_404(Music, id=music_id)
         music.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MusicRandomView(APIView):
+    def get(self, request):
+        # random 제한 수가 없으면 default: 20 개로 랜덤 music 목록 출력
+        limit = request.data.get("limit",20)
+        print(limit)
+        max_id = Music.objects.aggregate(max_id=Max('id'))['max_id']
+        musit_random_list = []
+        while len(musit_random_list) < limit:
+            random_index = random.randint(1, max_id)
+            music = Music.objects.get(id=random_index)
+            if music:
+                serializer = MusicSerializer(music)
+                musit_random_list.append(serializer.data)
+        return Response(musit_random_list, status=status.HTTP_200_OK)
