@@ -51,16 +51,16 @@ class FollowView(APIView):
             return Response("follow했습니다.", status=status.HTTP_200_OK)
 
 class ProfileView(APIView):
-    def get(self, request, user_id):
-        profile = get_object_or_404(User, id=user_id)
+    def get(self, request):
+        profile = get_object_or_404(User, id=request.user.id)
         serializer = ProfileSerializer(profile)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     
-    def put(self, request, user_id):
-        profile = get_object_or_404(User, id=user_id)
-        serializer = ProfileEditSerializer(profile, data=request.data)
+    def put(self, request):
+        profile = get_object_or_404(User, id=request.user.id)
+        serializer = ProfileEditSerializer(profile, data=request.data, partial = True)
         
         if serializer.is_valid():
             serializer.save()
