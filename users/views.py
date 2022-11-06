@@ -55,7 +55,6 @@ class ProfileView(APIView):
     def get(self, request, username):
         profile = get_object_or_404(User, username=username)
         serializer = ProfileSerializer(profile)
-        
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -68,10 +67,10 @@ class MyProfileView(APIView):
         else:
             return Response("접근불가", status=status.HTTP_400_BAD_REQUEST)
     
+
     def put(self, request):
         profile = get_object_or_404(User, id=request.user.id)
-        serializer = MyProfileEditSerializer(profile, data=request.data)
-        
+        serializer = MyProfileEditSerializer(profile, data=request.data, partial = True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
