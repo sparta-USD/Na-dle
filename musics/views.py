@@ -61,7 +61,7 @@ class ReviewDetailView(APIView):
                 return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
 
-class MusicView(APIView):
+class MusicRecommandView(APIView):
     def get(self, request):
         musics = Music.objects.all()[:11]
         serializer = MusicSerializer(musics, many=True)
@@ -83,7 +83,12 @@ class MusicView(APIView):
         }
         return Response(context, status=status.HTTP_200_OK)
 
-    
+class MusicView(APIView):
+    def get(self, request):
+        musics = Music.objects.all().order_by("-id") # 최신순 정렬
+        serializer = MusicSerializer(musics, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request):
         serializer = MusicCreateSerializer(data=request.data)
         if serializer.is_valid():
