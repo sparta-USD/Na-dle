@@ -3,9 +3,14 @@ from .models import Music
 from musics.models import Review
 
 class MusicSerializer(serializers.ModelSerializer):
+    avg_grade = serializers.SerializerMethodField()
+    
     class Meta:
         model = Music
         fields = "__all__"
+    
+    def get_avg_grade(self, obj):
+        return obj.avg_grade()
 
 class MusicCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,7 +44,11 @@ class ReviewUpdateSerializer(serializers.ModelSerializer):
 
 class MusicDetailSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True)
+    avg_grade = serializers.SerializerMethodField()
     
     class Meta:
         model = Music
         fields = "__all__"
+        
+    def get_avg_grade(self, obj):
+        return obj.avg_grade()
