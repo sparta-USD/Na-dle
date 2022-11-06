@@ -52,10 +52,14 @@ class FollowView(APIView):
 
 
 class ProfileView(APIView):
-    def get(self, request, user_id):
-        profile = get_object_or_404(User, id=user_id)
+<<<<<<<<< Temporary merge branch 1
+    def get(self, request, username):
+        profile = get_object_or_404(User, username=username)
+=========
+    def get(self, request):
+        profile = get_object_or_404(User, id=request.user.id)
+>>>>>>>>> Temporary merge branch 2
         serializer = ProfileSerializer(profile)
-        
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -68,9 +72,16 @@ class MyProfileView(APIView):
         else:
             return Response("접근불가", status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, user_id):
-        profile = get_object_or_404(User, id=user_id)
-        serializer = ProfileEditSerializer(profile, data=request.data)
+<<<<<<<<< Temporary merge branch 1
+    def put(self, request):
+        profile = get_object_or_404(User, id=request.user.id)
+        serializer = MyProfileEditSerializer(profile, data=request.data)
+=========
+    
+    def put(self, request):
+        profile = get_object_or_404(User, id=request.user.id)
+        serializer = ProfileEditSerializer(profile, data=request.data, partial = True)
+>>>>>>>>> Temporary merge branch 2
         
         if serializer.is_valid():
             serializer.save()
