@@ -11,6 +11,18 @@ class Music(models.Model):
     
     def __str__(self):
         return str(self.title)
+    
+    def avg_grade(self):
+        reviews = self.reviews.all() # Review 역참조
+        sum_grade = 0
+        if reviews:
+            for review in reviews:
+                sum_grade += review.grade
+            avg_grade = sum_grade / len(reviews)
+            avg_grade = round(avg_grade, 1)
+            return avg_grade
+        else: # 리뷰가 없다면
+            return 0
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="my_reviews")
