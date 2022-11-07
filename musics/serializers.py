@@ -34,6 +34,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    def get_user(self, obj):
+        return obj.user.username
+
     class Meta:
         model = Review
         fields = '__all__'

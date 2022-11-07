@@ -20,7 +20,7 @@ class ReviewView(APIView):
         reviews = musics.reviews.all()
         for review in reviews:
             if review.user==request.user:
-                return Response({'message':'이미 작성 하였습니다!'})
+                return Response({'message':'이미 작성 하였습니다!'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = ReviewCreateSerializer(data=request.data)
         if serializer.is_valid():
@@ -40,7 +40,7 @@ class ReviewView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ReviewDetailView(APIView):
-    def put(self, request, music_id, review_id): 
+    def put(self, request, review_id): 
         review = get_object_or_404(Review, id=review_id)
         if request.user == review.user:
             serializer = ReviewUpdateSerializer(review, data=request.data)
@@ -50,15 +50,15 @@ class ReviewDetailView(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
+            return Response({"messages": "권한이 없습니다!"}, status=status.HTTP_403_FORBIDDEN)
         
-    def delete(self, request, music_id, review_id): 
+    def delete(self, request, review_id): 
             review = get_object_or_404(Review, id=review_id)
             if request.user == review.user:
                 review.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+                return Response({"messages": "삭제 되었습니다."}, status=status.HTTP_204_NO_CONTENT)
             else:
-                return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
+                return Response({"messages": "권한이 없습니다!"}, status=status.HTTP_403_FORBIDDEN)
 
 
 class MusicRecommandView(APIView):
