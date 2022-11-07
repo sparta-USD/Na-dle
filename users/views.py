@@ -48,10 +48,10 @@ class FollowView(APIView):
         me = request.user
         if me in you.follower.all():
             you.follower.remove(me)
-            return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+            return Response({"result":"unfollow"}, status=status.HTTP_200_OK)
         else:
             you.follower.add(me)
-            return Response("follow했습니다.", status=status.HTTP_200_OK)
+            return Response({"result":"follow"}, status=status.HTTP_200_OK)
 
 
 class ProfileView(APIView):

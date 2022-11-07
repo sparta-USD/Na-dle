@@ -61,8 +61,17 @@ class LogoutSerializer(serializers.ModelSerializer):
         except TokenError:
             self.fail('bad_token')
 
+class UserFollowSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ("pk","username","follow","profile_image")
+    
+        
 class ProfileSerializer(serializers.ModelSerializer):
     my_reviews = ReviewSerializer(many=True)
+    follower = UserFollowSerializer(many=True)
+    follow = UserFollowSerializer(many=True)
     
     def get_user(self, obj):
         return obj.user.username
@@ -70,6 +79,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+        
+
 
 
 class MyProfileSerializer(serializers.ModelSerializer):
