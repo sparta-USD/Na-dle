@@ -28,7 +28,7 @@ class ReviewView(APIView):
             
             # 리뷰 생성시 코사인유사도 실시간으로 측정하는 코드 추가
             grades_data = {
-                'user_id':serializer.data['user'],
+                'user_id':serializer.data['id'],
                 'music_id':serializer.data['music'],
                 'grade':serializer.data['grade'],
                 'created_at':serializer.data['created_at']
