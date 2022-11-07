@@ -54,7 +54,7 @@ class FollowView(APIView):
 class ProfileView(APIView):
     def get(self, request, username):
         profile = get_object_or_404(User, username=username)
-        serializer = ProfileSerializer(profile)
+        serializer = ProfileSerializer(profile)      
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
