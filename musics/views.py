@@ -7,7 +7,7 @@ from musics.models import Review,Music
 from musics.serializers import ReviewSerializer,ReviewCreateSerializer,MusicSerializer,MusicCreateSerializer, MusicDetailSerializer, ReviewUpdateSerializer
 from musics.recommend import recommend_musics, recommend_users, music_grades_merge, collaborative_filtering
 from users.models import User
-from users.serializers import RecommendUserSerializer
+from users.serializers import RecommendUserSerializer, FirstUserSerializer
 from django.db.models import Max 
 
 from musics.dummy import grade_to_csv
@@ -134,3 +134,4 @@ class MusicRandomView(APIView):
                 serializer = MusicSerializer(music)
                 musit_random_list.append(serializer.data)
         return Response(musit_random_list, status=status.HTTP_200_OK)
+

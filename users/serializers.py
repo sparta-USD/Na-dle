@@ -36,6 +36,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = user.username
+        token['is_admin'] = user.is_admin
         return token
     
     
@@ -81,8 +82,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
 
-
-
 class MyProfileSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.username
@@ -91,8 +90,14 @@ class MyProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
         
+        
 class MyProfileEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields=("profile_image", "fullname", "email")
         
+        
+class FirstUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("is_admin",)
