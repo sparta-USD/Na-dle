@@ -52,14 +52,9 @@ class FollowView(APIView):
 
 
 class ProfileView(APIView):
-<<<<<<<<< Temporary merge branch 1
     def get(self, request, username):
         profile = get_object_or_404(User, username=username)
-=========
-    def get(self, request):
-        profile = get_object_or_404(User, id=request.user.id)
->>>>>>>>> Temporary merge branch 2
-        serializer = ProfileSerializer(profile)
+        serializer = ProfileSerializer(profile)      
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
