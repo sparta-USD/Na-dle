@@ -17,11 +17,14 @@ class MusicCreateSerializer(serializers.ModelSerializer):
         model = Music
         fields = ('title','image','artist','album')
 
-
+class MusicSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Music
+        fields = ('title','image','artist')
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-
+    music = MusicSimpleSerializer()
     def get_user(self, obj):
         return obj.user.username
 
@@ -34,7 +37,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-        
+
+
+                
 
 class ReviewUpdateSerializer(serializers.ModelSerializer):
     class Meta:
