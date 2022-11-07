@@ -20,7 +20,7 @@ class MusicCreateSerializer(serializers.ModelSerializer):
 class MusicSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
-        fields = ('title','image','artist')
+        fields = ('id','title','image','artist')
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
