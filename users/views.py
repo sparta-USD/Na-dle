@@ -16,6 +16,9 @@ from rest_framework_simplejwt.views import (
 class UserView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
+        user = User.objects.filter(username=request.data['username']).count()
+        if user > 0:
+            return Response({"message":"이미 존재"}, status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             serializer.save()
             return Response({"message":"가입완료!"}, status=status.HTTP_201_CREATED)
@@ -67,17 +70,10 @@ class MyProfileView(APIView):
         else:
             return Response("접근불가", status=status.HTTP_400_BAD_REQUEST)
     
-<<<<<<<<< Temporary merge branch 1
     def put(self, request):
         profile = get_object_or_404(User, id=request.user.id)
         serializer = MyProfileEditSerializer(profile, data=request.data)
-=========
-    
-    def put(self, request):
-        profile = get_object_or_404(User, id=request.user.id)
-        serializer = ProfileEditSerializer(profile, data=request.data, partial = True)
->>>>>>>>> Temporary merge branch 2
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
