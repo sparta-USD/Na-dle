@@ -72,7 +72,7 @@ class MyProfileView(APIView):
     
     def put(self, request):
         profile = get_object_or_404(User, id=request.user.id)
-        serializer = MyProfileEditSerializer(profile, data=request.data)
+        serializer = MyProfileEditSerializer(profile, data=request.data, partial = True)
 
         if serializer.is_valid():
             serializer.save()
