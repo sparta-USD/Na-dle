@@ -25,9 +25,9 @@ class UserView(APIView):
         else:
             return Response({"message":f"${serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)          
 
-class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
-
+class SigninView(TokenObtainPairView):
+    serializer = CustomTokenObtainPairSerializer
+        
 class LogoutView(APIView):
     serializer = LogoutSerializer
     
