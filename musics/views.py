@@ -63,7 +63,7 @@ class ReviewDetailView(APIView):
 
 class MusicRecommandView(APIView):
     def get(self, request):
-        musics = Music.objects.all()[:11]
+        musics = Music.objects.all()[:200]
         serializer = MusicSerializer(musics, many=True)
         
         # 메인페이지에서 추천기능 코드 추가
