@@ -35,8 +35,12 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    user_id = serializers.SerializerMethodField()
     def get_user(self, obj):
         return obj.user.username
+    
+    def get_user_id(self, obj):
+        return obj.user.id
 
     class Meta:
         model = Review
